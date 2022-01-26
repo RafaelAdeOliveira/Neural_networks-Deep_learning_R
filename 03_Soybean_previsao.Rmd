@@ -1,0 +1,42 @@
+---
+Formação Cientista de dados - Rafael Amaral de Oliveira
+Soybean - Machine Learning e Deep Learning
+---
+
+```{r}
+library(randomForest)
+```
+Carregar Dados
+```{r}
+soja = read.csv("soybean.csv", stringsAsFactors = T)
+soja
+dim(soja)
+#classes
+unique(soja$class)
+```
+Gerar conjuntos de dados aleatórios, para teste e treino com 70% e 30%
+das instâncias, aproximadamente
+```{r}
+amostra = sample(2,683,replace = T, prob = c(0.7,0.3))
+sojatreino = soja[amostra == 1,]
+sojateste = soja[amostra == 2,]
+```
+Modelo usando dados de treino
+```{r}
+floresta = randomForest(class ~ ., data = sojatreino, ntree = 100, proximity = T)
+floresta
+```
+Testa o modelo fazendo previsão com dados de teste
+```{r}
+previsao = predict(floresta, sojateste)
+previsao
+```
+Matriz de confusão
+```{r}
+floresta$confusion
+```
+Precisao
+```{r}
+1 - mean(floresta$confusion[,'class.error'])
+```
+
